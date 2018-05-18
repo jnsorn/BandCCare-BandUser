@@ -104,22 +104,19 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent;
                 switch (id) {
                     case R.id.navigation_myPage:
-                        Toast.makeText(MainActivity.this, "App user info", Toast.LENGTH_LONG).show();
                         intent = new Intent(getApplicationContext(), InfoActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                        intent.putExtra("info", 1);
                         startActivity(intent);
                         break;
 
                     case R.id.navigation_logout:
                         intent = new Intent(getApplicationContext(), LoginActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-
-                        );
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         break;
 
                 }
+
 
                 return true;
             }

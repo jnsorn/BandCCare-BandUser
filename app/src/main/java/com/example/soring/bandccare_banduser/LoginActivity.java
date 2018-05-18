@@ -28,8 +28,6 @@ public class LoginActivity extends AppCompatActivity {
     RetroClient retroClient;
 
     HashMap<String, Object> parameter;
-    ImageView username_img;
-    ImageView password_img;
 
     public static LoginActivity getInstance() {
         if (instance == null)

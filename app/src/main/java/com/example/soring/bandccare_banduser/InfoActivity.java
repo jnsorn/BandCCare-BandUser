@@ -90,15 +90,12 @@ public class InfoActivity extends AppCompatActivity {
                     case R.id.navigation_myPage:
                         intent = new Intent(getApplicationContext(), InfoActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                        intent.putExtra("info", 1);
                         startActivity(intent);
                         break;
 
                     case R.id.navigation_logout:
                         intent = new Intent(getApplicationContext(), LoginActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-
-                        );
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         break;
 
@@ -107,6 +104,7 @@ public class InfoActivity extends AppCompatActivity {
                 return true;
             }
         });
+
         retroClient.GetInfo(id, new RetroCallback() {
             @Override
             public void onError(Throwable t) {
