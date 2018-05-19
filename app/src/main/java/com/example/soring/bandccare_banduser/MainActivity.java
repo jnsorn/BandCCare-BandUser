@@ -1,12 +1,20 @@
 package com.example.soring.bandccare_banduser;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -35,19 +43,34 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends AppCompatActivity{
     public static MainActivity instance;
     private DrawerLayout mDrawerLayout;
-    // RetroClient retroClient;
+
+    private FusedLocationProviderClient gFusedLocationClient;
+    private Location location;
+    private LatLng cur_location;
+    private double latitude;
+    private double longitude;
+    private HashMap<String, Double> locationmap;
 
     public static final long ref = System.currentTimeMillis();
     SimpleDateFormat dateFormat = new SimpleDateFormat("mm:ss");
@@ -69,18 +92,19 @@ public class MainActivity extends AppCompatActivity {
     int result;
     String time_result;
     TextView today_tv;
-    //ServiceThread thread;
 
     public static MainActivity getInstance() {
         if (instance == null)
             instance = new MainActivity();
         return instance;
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        locationmap = new HashMap<>();
+        gFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
         retroClient = RetroClient.getInstance().createBaseApi();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -212,9 +236,9 @@ public class MainActivity extends AppCompatActivity {
         lineChart.animateY(2000, Easing.EasingOption.EaseInElastic);
         lineChart.zoom((float) 1.2, 1, 0, 0);
 
-
+        atLocationChange();
+        getlocation();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -295,7 +319,6 @@ public class MainActivity extends AppCompatActivity {
             if(msg.what == 0 ){
                 StartgetData();
                 chartUpdate(startIndex);
-
                 Log.e("심박테이블 Index ->", String.valueOf(startIndex));
                 xindex++;
                 startIndex++;
@@ -303,6 +326,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+
     class DataThread extends Thread{
         @Override
         public void run() {
@@ -315,6 +339,23 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    public void mapUpdate(){
+        locationmap.put("latitude",latitude);
+        locationmap.put("longitude",longitude);
+        Log.e("test at mapupdate",""+latitude+","+longitude);
+        retroClient.Put_Location(locationmap, new RetroCallback() {
+            @Override
+            public void onError(Throwable t) {
+            }
+            @Override
+            public void onSuccess(int code, Object receivedData) {
+            }
+            @Override
+            public void onFailure(int code) {
+            }
+        });
     }
 
     public String getTime() {
@@ -345,7 +386,74 @@ public class MainActivity extends AppCompatActivity {
             // Convert timestamp to hour:minute
             return mDataFormat.format(mDate);
         }
+
+
     }
 
+    @SuppressWarnings("MissingPermission")
+    @AfterPermissionGranted(1)
+    public void getlocation(){
+        String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION};
+        if (EasyPermissions.hasPermissions(getApplicationContext(), perms)) {
+            gFusedLocationClient.getLastLocation().addOnCompleteListener(this, new OnCompleteListener<Location>() {
+                @Override
+                public void onComplete(@NonNull Task<Location> task) {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        location = task.getResult();
+
+                        cur_location = new LatLng(location.getLatitude(), location.getLongitude());
+                        Log.e("location info ->",""+cur_location);
+                    }
+                }
+            });
+        } else{}
+    }
+
+    public void atLocationChange() {
+        Log.e("atlocationchanged","@@@@");
+        final LocationManager locationManager = (LocationManager)getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+        final LocationListener mLocationListener = new LocationListener() {
+            public void onLocationChanged(Location location) {
+                longitude = location.getLongitude();
+                latitude = location.getLatitude();
+
+                String provider = location.getProvider();
+                Log.e("test", "위치정보 : " + provider + "\n위도 : " + longitude  + "\n경도:" + latitude);
+                cur_location = new LatLng(location.getLatitude(), location.getLongitude());
+                Log.e("location info ->",""+cur_location);
+
+                mapUpdate();
+
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+
+        };
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 300, 1, mLocationListener);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 300, 1, mLocationListener);
+    }
 
 }

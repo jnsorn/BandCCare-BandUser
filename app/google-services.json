@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "334155436182",
+    "firebase_url": "https://bandcctv-banduser.firebaseio.com",
+    "project_id": "bandcctv-banduser",
+    "storage_bucket": "bandcctv-banduser.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:334155436182:android:0c85b0edcf83d024",
+        "android_client_info": {
+          "package_name": "com.example.soring.bandccare_banduser"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "334155436182-h35b5ep7favapqtndim16dl65tbdhe2j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.soring.bandccare_banduser",
+            "certificate_hash": "c5301594313dec69962ff86800ae9b3a3e1d3df9"
+          }
+        },
+        {
+          "client_id": "334155436182-gg2tbn35vms6m1s65g77os3mf70o4mks.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcfX77C-ak8Y5vuzDE37-hkWg1yIw4emc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "334155436182-gg2tbn35vms6m1s65g77os3mf70o4mks.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
