@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.soring.bandccare_banduser.Retrofit.Model.Response_Login;
@@ -54,17 +53,17 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // 서버 안통할때 용 코드 (지우지마세용)
 ///*
-                intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+//                intent = new Intent(getApplicationContext(), MainActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(intent);
               //  */
-/*
+
                 parameter.put("AppUserInfo_id", editText_id.getText().toString());
                 parameter.put("AppUserInfo_password", editText_pw.getText().toString());
 
                 Log.e("input id", "id->" + editText_id.getText().toString());
                 Log.e("input password", "password->" + editText_pw.getText().toString());
-                retroClient.Insert_Band_Member(parameter, new RetroCallback() {
+                retroClient.Login(parameter, new RetroCallback() {
                     @Override
                     public void onError(Throwable t) {
 
@@ -88,13 +87,44 @@ public class LoginActivity extends AppCompatActivity {
                         } else {
                             Toast.makeText(LoginActivity.this, "해당아이디가 없습니다.", Toast.LENGTH_SHORT).show();
                         }
-                    }
 
+                    }
                     @Override
                     public void onFailure(int code) {
 
                     }
-                });*/
+                });
+//                retroClient.Insert_Band_Member(parameter, new RetroCallback() {
+//                    @Override
+//                    public void onError(Throwable t) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onSuccess(int code, Object receivedData) {
+//                        Response_Login data = (Response_Login) receivedData;
+//                        Log.e("login get data", "data->" + data.getSuccess());
+//                        if (data.getSuccess().equals("success")) {
+//                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                            startActivity(intent);
+//
+//
+//                            editor.putString("id", editText_id.getText().toString());
+//                            editor.putString("pw", editText_pw.getText().toString());
+//                            editor.commit();
+//                        } else if (data.getSuccess().equals("nomatch")) {
+//                            Toast.makeText(LoginActivity.this, "비밀번호 혹은 아이디를 확인하세요", Toast.LENGTH_SHORT).show();
+//                        } else {
+//                            Toast.makeText(LoginActivity.this, "해당아이디가 없습니다.", Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(int code) {
+//
+//                    }
+//                });
             }
 
         });
