@@ -19,7 +19,6 @@ import java.util.HashMap;
 public class LoginActivity extends AppCompatActivity {
     private static LoginActivity instance;
     SharedPreferences.Editor editor;
-    Intent intent;
     EditText editText_id;
     EditText editText_pw;
     Button login_btn;
@@ -94,37 +93,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     }
                 });
-//                retroClient.Insert_Band_Member(parameter, new RetroCallback() {
-//                    @Override
-//                    public void onError(Throwable t) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onSuccess(int code, Object receivedData) {
-//                        Response_Login data = (Response_Login) receivedData;
-//                        Log.e("login get data", "data->" + data.getSuccess());
-//                        if (data.getSuccess().equals("success")) {
-//                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                            startActivity(intent);
-//
-//
-//                            editor.putString("id", editText_id.getText().toString());
-//                            editor.putString("pw", editText_pw.getText().toString());
-//                            editor.commit();
-//                        } else if (data.getSuccess().equals("nomatch")) {
-//                            Toast.makeText(LoginActivity.this, "비밀번호 혹은 아이디를 확인하세요", Toast.LENGTH_SHORT).show();
-//                        } else {
-//                            Toast.makeText(LoginActivity.this, "해당아이디가 없습니다.", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(int code) {
-//
-//                    }
-//                });
+
             }
 
         });
